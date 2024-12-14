@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 
@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
@@ -13,7 +14,7 @@ public class Elevator extends SubsystemBase {
     private final double bottomPosition;
     private double targetPosition;
 
-    private double kP = 0;
+    private double kP = 0.2;
     private double kI = 0;
     private double kD = 0;
     private double kF = 0;
@@ -49,6 +50,13 @@ public class Elevator extends SubsystemBase {
     private void goBottom(){
         this.targetPosition = this.bottomPosition;
     }
+    private void manualUp(){
+        targetPosition += .1;
+    }
+    private void manualDown(){
+        targetPosition -= .1;
+    }
+    
 
     public Command topCommand(){
         return new InstantCommand(
@@ -62,6 +70,19 @@ public class Elevator extends SubsystemBase {
             this
         );
     }
+    public Command goUpCommand(){
+        return new RunCommand(
+            () -> {this.manualUp();},
+            this
+        );
+    }
+    public Command goDownCommand(){
+        return new RunCommand(
+            () -> {this.manualDown();},
+            this
+        );
+    }
+    
 
     @Override
     public void periodic(){
@@ -82,6 +103,8 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("elevator/kF", this.kF);
         SmartDashboard.putNumber("elevator/postion", currentPosition);
         SmartDashboard.putNumber("elevator/target", this.targetPosition);
+
+        SmartDashboard.putNumber("elevator/motor current", this.elevatorMotor.getOutputCurrent());
     }
     
 }

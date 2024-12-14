@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 
@@ -10,7 +10,7 @@ public class Door extends SubsystemBase{
     private final int DOOR_MOTOR_ID = 51; 
     private final CANSparkMax m_doorMotor = new CANSparkMax(DOOR_MOTOR_ID, CANSparkMax.MotorType.kBrushless);
     
-    public double kP = 0.0; //TODO
+    public double kP = 1.0; //TODO
     private double kI = 0.0; 
     private double kD = 0.0; //TODO
     public double kF = 0.0; //TODO
@@ -20,7 +20,7 @@ public class Door extends SubsystemBase{
     private double closedPosition;
     private double targetPosition;
 
-    public Door(){
+    public Door(Elevator elevator){
         super("Door");
         this.m_doorMotor.restoreFactoryDefaults();
         this.m_doorMotor.setInverted(false);
@@ -42,6 +42,9 @@ public class Door extends SubsystemBase{
     }
     public void closeDoor(){
         this.targetPosition = this.closedPosition; 
+    }
+    public void doorTiltSixty(){
+        this.targetPosition = this.closedPosition + 2.125;
     }
     @Override
     public void periodic(){
@@ -66,3 +69,5 @@ public class Door extends SubsystemBase{
     }
     
 }
+
+
